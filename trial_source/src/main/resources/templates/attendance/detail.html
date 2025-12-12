@@ -86,6 +86,12 @@
 			const minutes = ('0' + today.getMinutes()).slice(-2);
 			return hours + ':' + minutes;
 		}
+		window.onload = function () {
+			<!--15日はここから-->
+			if (notEnter == true) {
+				alert("過去日の勤怠に未入力があります。");
+			}
+		};
 	</script>
 
 </body>

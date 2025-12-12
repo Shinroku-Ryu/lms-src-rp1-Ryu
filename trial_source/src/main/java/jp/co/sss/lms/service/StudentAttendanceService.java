@@ -28,6 +28,15 @@ import jp.co.sss.lms.util.TrainingTime;
  * 
  * @author 東京ITスクール
  */
+/**
+ * 
+ */
+/**
+ * 
+ */
+/**
+ * 
+ */
 @Service
 public class StudentAttendanceService {
 
@@ -332,6 +341,25 @@ public class StudentAttendanceService {
 		}
 		// 完了メッセージ
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
+	}
+	
+	/*
+	 * 未入力件数の取得
+	 */
+	public Boolean notEnterCount(Integer lmsUserId,Short deleteFlg,Date trainingDate) {
+		
+//		// 当日日付
+//		Date date = new Date();
+		// 本日の研修日
+		trainingDate = attendanceUtil.getTrainingDate();
+		
+		Integer notEnterCount = tStudentAttendanceMapper.notEnterCount(lmsUserId, deleteFlg, trainingDate);
+		//未入力件数が0以上の場合trueを返す
+		if(notEnterCount > 0) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 }
