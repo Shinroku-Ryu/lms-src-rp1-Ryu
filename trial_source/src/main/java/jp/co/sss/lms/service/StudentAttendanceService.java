@@ -28,15 +28,7 @@ import jp.co.sss.lms.util.TrainingTime;
  * 
  * @author 東京ITスクール
  */
-/**
- * 
- */
-/**
- * 
- */
-/**
- * 
- */
+
 @Service
 public class StudentAttendanceService {
 
@@ -343,21 +335,26 @@ public class StudentAttendanceService {
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
 	
-	/*
-	 * 未入力件数の取得
+	/**
+	 * 勤怠未入力件数があるかどうかを判定
+	 * @param lmsUserId
+	 * @author 劉-Task.25
+	 * @return 判定結果
 	 */
-	public Boolean notEnterCount(Integer lmsUserId,Short deleteFlg,Date trainingDate) {
+	public Boolean notEnterCount(Integer lmsUserId) {
 		
-//		// 当日日付
-//		Date date = new Date();
+		// 当日日付
+		Date date = new Date();
 		// 本日の研修日
-		trainingDate = attendanceUtil.getTrainingDate();
+		date = attendanceUtil.getTrainingDate();
 		
-		Integer notEnterCount = tStudentAttendanceMapper.notEnterCount(lmsUserId, deleteFlg, trainingDate);
+		Integer notEnterCount = 
+				tStudentAttendanceMapper.notEnterCount(lmsUserId, Constants.DB_FLG_FALSE, date);
 		//未入力件数が0以上の場合trueを返す
 		if(notEnterCount > 0) {
 			return true;
 		}else {
+			//0の場合はfalseを返す
 			return false;
 		}
 	}

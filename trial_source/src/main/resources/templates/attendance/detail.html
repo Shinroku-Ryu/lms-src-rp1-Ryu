@@ -87,8 +87,8 @@
 			return hours + ':' + minutes;
 		}
 		window.onload = function () {
-			<!--15日はここから-->
-			if (notEnter == true) {
+			const notEnter = /*[[${notEnter}]]*/""
+			if (notEnter) {
 				alert("過去日の勤怠に未入力があります。");
 			}
 		};

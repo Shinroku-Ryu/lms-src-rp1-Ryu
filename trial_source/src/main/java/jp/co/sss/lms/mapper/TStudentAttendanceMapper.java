@@ -14,6 +14,7 @@ import jp.co.sss.lms.entity.TStudentAttendance;
  * 
  * @author 東京ITスクール
  */
+
 @Mapper
 public interface TStudentAttendanceMapper {
 
@@ -65,8 +66,14 @@ public interface TStudentAttendanceMapper {
 	 */
 	Boolean update(TStudentAttendance tStudentAttendance);
 	
-	/*
-	 * 勤怠情報（受講生入力）未入力件数取得
+	/**
+	 * 勤怠情報（受講生入力）未入力件数の取得
+	 * 
+	 * @author 劉-Task.25
+	 * @param lmsUserId
+	 * @param deleteFlg
+	 * @param trainingDate
+	 * @return 勤怠未入力件数
 	 */
 	Integer notEnterCount(Integer lmsUserId,Short deleteFlg,Date trainingDate);
 
