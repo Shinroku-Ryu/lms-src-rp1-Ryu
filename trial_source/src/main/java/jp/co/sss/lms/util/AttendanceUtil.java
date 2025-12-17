@@ -85,6 +85,8 @@ public class AttendanceUtil {
 		TrainingTime total = new TrainingTime(hour, minute);
 		return total;
 	}
+	
+	
 
 	/**
 	 * 時刻分を丸めた本日日付を取得
@@ -130,6 +132,90 @@ public class AttendanceUtil {
 
 		}
 		return map;
+	}
+	
+	/**
+	 * 時間マップを取得（選択肢用）
+	 * 
+	 * @author 劉 Task.26
+	 * @return 時間マップ
+	 */
+	public LinkedHashMap<Integer, String> setTrainingTimeHourMap() {
+		LinkedHashMap<Integer, String> hourMap = new LinkedHashMap<>();
+		hourMap.put(null, "");
+		for (Integer i = 0; i < 24;) {
+			String hour;
+			
+			if(i < 10) {
+				hour = "0" + i;
+			}else {
+				hour = i.toString();
+			}
+			
+			hourMap.put(i, hour);
+			
+			i++;
+
+		}
+		return hourMap;
+	}
+	
+	/**
+	 * 分マップを取得
+	 * 
+	 * @author 劉 Task.26
+	 * @return 分マップ（選択肢用）
+	 */
+	public LinkedHashMap<Integer, String> setTrainingTimeMinuteMap() {
+		LinkedHashMap<Integer, String> minuteMap = new LinkedHashMap<>();
+		minuteMap.put(null, "");
+		for (Integer i = 0; i < 60;) {
+			String minute;
+			
+			if(i < 10) {
+				minute = "0" + i;
+			}else {
+				minute = i.toString();
+			}
+			
+			minuteMap.put(i, minute);
+			
+			i++;
+
+		}
+		return minuteMap;
+	}
+	
+	/**
+	 * 勤怠時間の時間を取得
+	 * 
+	 * @author 劉 Task.26
+	 * @param trainingTime
+	 * @return 勤怠時間の時間
+	 */
+	public String getTrainingTimeHour(String trainingTime) {
+		
+		TrainingTime time = new TrainingTime(trainingTime);
+		Integer intHour = time.getHour(); 
+		String strHour = intHour.toString();
+	
+		return strHour;
+	}
+	
+	/**
+	 * 勤怠時間の分を取得
+	 * 
+	 * @author 劉 Task.26
+	 * @param trainingTime
+	 * @return 
+	 */
+	public String getTrainingTimeMinute(String trainingTime) {
+		
+		TrainingTime time = new TrainingTime(trainingTime);
+		Integer intMinute = time.getMinute(); 
+		String strMinute = intMinute.toString();
+	
+		return strMinute;
 	}
 
 	/**

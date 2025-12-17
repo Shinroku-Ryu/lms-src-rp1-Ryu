@@ -220,6 +220,11 @@ public class StudentAttendanceService {
 		attendanceForm.setUserName(loginUserDto.getUserName());
 		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
 		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
+		
+		//Task.26 時間マップを取得
+		attendanceForm.setTrainingHours(attendanceUtil.setTrainingTimeHourMap());
+		//Task.26 分マップを取得
+		attendanceForm.setTrainingMinutes(attendanceUtil.setTrainingTimeMinuteMap());
 
 		// 途中退校している場合のみ設定
 		if (loginUserDto.getLeaveDate() != null) {
@@ -244,6 +249,19 @@ public class StudentAttendanceService {
 				dailyAttendanceForm.setBlankTimeValue(String.valueOf(
 						attendanceUtil.calcBlankTime(attendanceManagementDto.getBlankTime())));
 			}
+			
+			//劉 Task.26
+			//Dtoから出勤時間を取得
+			String trainingStartTime = attendanceManagementDto.getTrainingStartTime();
+			//出勤時間の時間、分を日次の勤怠フォームに追加
+			dailyAttendanceForm.setTrainingStartTimeHour(attendanceUtil.getTrainingTimeHour(trainingStartTime));
+			dailyAttendanceForm.setTrainingStartTimeMinute(attendanceUtil.getTrainingTimeMinute(trainingStartTime));
+			//Dtoから退勤時間を取得
+			String trainingEndTime = attendanceManagementDto.getTrainingEndTime();
+			//退勤時間の時間、分を日次の勤怠フォームに追加
+			dailyAttendanceForm.setTrainingEndTimeHour(attendanceUtil.getTrainingTimeHour(trainingEndTime));
+			dailyAttendanceForm.setTrainingEndTimeMinute(attendanceUtil.getTrainingTimeMinute(trainingEndTime));
+			
 			dailyAttendanceForm.setStatus(String.valueOf(attendanceManagementDto.getStatus()));
 			dailyAttendanceForm.setNote(attendanceManagementDto.getNote());
 			dailyAttendanceForm.setSectionName(attendanceManagementDto.getSectionName());
@@ -298,6 +316,12 @@ public class StudentAttendanceService {
 			TrainingTime trainingStartTime = null;
 			trainingStartTime = new TrainingTime(dailyAttendanceForm.getTrainingStartTime());
 			tStudentAttendance.setTrainingStartTime(trainingStartTime.getFormattedString());
+			
+			//String hour = dailyAttendanceForm.getTrainingStartTimeHour();
+			//String min = dailyAttendanceForm.getTrainingStartTimeMin();
+			//TrainingTime trainingStartTime;
+			//trainingStartTime = hour + min;
+			
 			// 退勤時刻整形
 			TrainingTime trainingEndTime = null;
 			trainingEndTime = new TrainingTime(dailyAttendanceForm.getTrainingEndTime());
@@ -337,6 +361,7 @@ public class StudentAttendanceService {
 	
 	/**
 	 * 勤怠未入力件数があるかどうかを判定
+	 * 
 	 * @param lmsUserId
 	 * @author 劉-Task.25
 	 * @return 判定結果
