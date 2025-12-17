@@ -18,16 +18,28 @@ public class DailyAttendanceForm {
 	private String trainingDate;
 	/** 出勤時間 */
 	private String trainingStartTime;
+	
+	//Task.26
 	/** 出勤時間（時）*/
-	private String trainingStartTimeHour;
+	private Integer trainingStartTimeHour;
+	/** 画面表示用出勤時間（時）*/
+	private String trainingStartTimeHourValue;
 	/** 出勤時間（分） */
-	private String trainingStartTimeMinute;
+	private Integer trainingStartTimeMinute;
+	/** 画面表示用出勤時間（分）*/
+	private String trainingStartTimeMinuteValue;
+	
 	/** 退勤時間 */
 	private String trainingEndTime;
 	/** 退勤時間（時間） */
-	private String trainingEndTimeHour;
+	private Integer trainingEndTimeHour;
+	/** 画面表示用退勤時間（時間） */
+	private String trainingEndTimeHourValue;
 	/** 退勤時間（分） */
-	private String trainingEndTimeMinute;
+	private Integer trainingEndTimeMinute;
+	/** 画面表示用退勤時間（分） */
+	private String trainingEndTimeMinuteValue;
+	
 	/** 中抜け時間 */
 	private Integer blankTime;
 	/** 中抜け時間（画面表示用） */

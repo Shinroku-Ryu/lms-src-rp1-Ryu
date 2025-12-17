@@ -193,13 +193,12 @@ public class AttendanceUtil {
 	 * @param trainingTime
 	 * @return 勤怠時間の時間
 	 */
-	public String getTrainingTimeHour(String trainingTime) {
+	public Integer getTrainingTimeHour(String trainingTime) {
 		
 		TrainingTime time = new TrainingTime(trainingTime);
 		Integer intHour = time.getHour(); 
-		String strHour = intHour.toString();
 	
-		return strHour;
+		return intHour;
 	}
 	
 	/**
@@ -209,13 +208,19 @@ public class AttendanceUtil {
 	 * @param trainingTime
 	 * @return 
 	 */
-	public String getTrainingTimeMinute(String trainingTime) {
+	public Integer getTrainingTimeMinute(String trainingTime) {
 		
 		TrainingTime time = new TrainingTime(trainingTime);
 		Integer intMinute = time.getMinute(); 
-		String strMinute = intMinute.toString();
+		
+		return intMinute;
+	}
 	
-		return strMinute;
+	public String setTrainingTime(String trainingTime) {
+		TrainingTime time = new TrainingTime(trainingTime);
+		String setTime = time.toString();
+		
+		return setTime;
 	}
 
 	/**

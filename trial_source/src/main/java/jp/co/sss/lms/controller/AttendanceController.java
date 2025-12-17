@@ -33,7 +33,6 @@ public class AttendanceController {
 	/**
 	 * 勤怠管理画面 初期表示
 	 * 
-	 * @author 劉-Task.25
 	 * @param lmsUserId
 	 * @param courseId
 	 * @param model
@@ -49,7 +48,7 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		
-		//勤怠未入力件数があるかどうかを判定
+		//Task.25 勤怠未入力件数があるかどうかを判定
 		boolean notEnter = studentAttendanceService.notEnterCount(loginUserDto.getLmsUserId());
 		model.addAttribute("notEnter",notEnter);
 
