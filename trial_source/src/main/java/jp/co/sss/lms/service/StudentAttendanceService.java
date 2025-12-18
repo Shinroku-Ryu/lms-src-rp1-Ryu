@@ -318,7 +318,8 @@ public class StudentAttendanceService {
 			}
 			tStudentAttendance.setLmsUserId(lmsUserId);
 			tStudentAttendance.setAccountId(loginUserDto.getAccountId());
-			// 出勤時刻整形
+			
+			// Task.26 劉 出勤時刻整形
 			TrainingTime trainingStartTime = null;
 			Integer startHour = dailyAttendanceForm.getTrainingStartTimeHour();
 			Integer startMinute = dailyAttendanceForm.getTrainingStartTimeMinute();
@@ -332,7 +333,7 @@ public class StudentAttendanceService {
 				tStudentAttendance.setTrainingStartTime(trainingStartTime.getFormattedString());
 			}
 			
-			// 退勤時刻整形
+			// Task.26 劉 退勤時刻整形
 			TrainingTime trainingEndTime = null;
 			Integer endHour = dailyAttendanceForm.getTrainingEndTimeHour();
 			Integer endMinute = dailyAttendanceForm.getTrainingEndTimeMinute();

@@ -47,15 +47,14 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
-								<!--Task.26-->
+								
+								<!--劉 Task.26 出退勤時間の時間、分に分けてセレクトボックスを追加-->
 								<td class="w70">
 									<select th:name="|attendanceList[${stat.index}].trainingStartTimeHour|" class="form-control">
 										<option th:each="trainingStartTimeHour : ${attendanceForm.trainingHours}" th:value="${trainingStartTimeHour.key}"
 											th:inlne="text" class="form-control"
 											th:selected="${trainingStartTimeHour.key == dailyAttendanceForm.trainingStartTimeHour}">[[${trainingStartTimeHour.value}]]</option>
 									</select>
-<!--									<input type="text" th:name="|attendanceList[${stat.index}].trainingStartTime|"-->
-<!--									th:value="${dailyAttendanceForm.trainingStartTime}" class="form-control" />-->
 								</td>
 								<td>:</td>
 								<td class="w70">
@@ -65,15 +64,12 @@
 											th:selected="${trainingStartTimeMinute.key == dailyAttendanceForm.trainingStartTimeMinute}">[[${trainingStartTimeMinute.value}]]</option>
 									</select>
 								</td>
-								
 								<td class="w70">
 									<select th:name="|attendanceList[${stat.index}].trainingEndTimeHour|" class="form-control">
 										<option th:each="trainingEndTimeHour : ${attendanceForm.trainingHours}"th:value="${trainingEndTimeHour.key}"
 											th:inlne="text" class="form-control"
 											th:selected="${trainingEndTimeHour.key == dailyAttendanceForm.trainingEndTimeHour}">[[${trainingEndTimeHour.value}]]</option>
 									</select>
-<!--									<input type="text" th:name="|attendanceList[${stat.index}].trainingEndTime|"-->
-<!--									th:value="${dailyAttendanceForm.trainingEndTime}" class="form-control" />-->
 								</td>
 								<td>:</td>
 								<td class="w70">
@@ -83,7 +79,6 @@
 											th:selected="${trainingEndTimeMinute.key == dailyAttendanceForm.trainingEndTimeMinute}">[[${trainingEndTimeMinute.value}]]</option>
 									</select>
 								</td>
-								
 								
 								<td class="w80">
 									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control">
