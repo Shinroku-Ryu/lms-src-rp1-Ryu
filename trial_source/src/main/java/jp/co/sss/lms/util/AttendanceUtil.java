@@ -216,13 +216,6 @@ public class AttendanceUtil {
 		return intMinute;
 	}
 	
-	public String setTrainingTime(String trainingTime) {
-		TrainingTime time = new TrainingTime(trainingTime);
-		String setTime = time.toString();
-		
-		return setTime;
-	}
-
 	/**
 	 * 研修日の判定
 	 * 
