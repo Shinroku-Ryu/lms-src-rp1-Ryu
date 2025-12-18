@@ -140,7 +140,15 @@ public class AttendanceController {
 
 		// 更新
 		String message = studentAttendanceService.update(attendanceForm);
-		model.addAttribute("message", message);
+		
+		if(!message.equals(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE)){
+			//入力チェックに通らない場合はエラーメッセージを出力
+			model.addAttribute("error", message);
+		}else{
+			model.addAttribute("message", message);
+		}
+		
+		
 		// 一覧の再取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());

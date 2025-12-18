@@ -333,6 +333,12 @@ public class StudentAttendanceService {
 				tStudentAttendance.setTrainingStartTime(trainingStartTime.getFormattedString());
 			}
 			
+			//Task.27
+			if (startHour == null && startMinute!= null || startHour!= null && startMinute == null) {
+				String errorMsg = messageUtil.getMessage(Constants.INPUT_INVALID,new String[]{"出勤時間"});
+				return errorMsg;
+			}
+			
 			// Task.26 劉 退勤時刻整形
 			TrainingTime trainingEndTime = null;
 			Integer endHour = dailyAttendanceForm.getTrainingEndTimeHour();
@@ -359,6 +365,12 @@ public class StudentAttendanceService {
 			}
 			// 備考
 			tStudentAttendance.setNote(dailyAttendanceForm.getNote());
+				if(dailyAttendanceForm.getNote().length() > 100) {
+					String errorMsg = messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH,
+						new String[]{"備考","100"});
+					return errorMsg;
+			}
+			
 			// 更新者と更新日時
 			tStudentAttendance.setLastModifiedUser(loginUserDto.getLmsUserId());
 			tStudentAttendance.setLastModifiedDate(date);
@@ -367,6 +379,10 @@ public class StudentAttendanceService {
 			// 登録用Listへ追加
 			tStudentAttendanceList.add(tStudentAttendance);
 		}
+		
+//		if(errorMsg != null){
+//			return List<>;}
+		
 		// 登録・更新処理
 		for (TStudentAttendance tStudentAttendance : tStudentAttendanceList) {
 			if (tStudentAttendance.getStudentAttendanceId() == null) {
@@ -378,6 +394,10 @@ public class StudentAttendanceService {
 			}
 		}
 		// 完了メッセージ
+		
+//		String completeMsg = constants;
+//		List<>{completeMsg};
+		
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
 	
