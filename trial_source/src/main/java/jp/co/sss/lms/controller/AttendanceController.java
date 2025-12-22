@@ -48,7 +48,7 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		
-		//Task.25 勤怠未入力件数があるかどうかを判定
+		//Task.25-劉 勤怠未入力件数があるかどうかを判定
 		boolean notEnter = studentAttendanceService.notEnterCount(loginUserDto.getLmsUserId());
 		model.addAttribute("notEnter",notEnter);
 
@@ -137,16 +137,28 @@ public class AttendanceController {
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
-
-		// 更新
-		String message = studentAttendanceService.update(attendanceForm);
 		
-		if(!message.equals(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE)){
-			//入力チェックに通らない場合はエラーメッセージを出力
-			model.addAttribute("error", message);
-		}else{
-			model.addAttribute("message", message);
-		}
+		String message = studentAttendanceService.update(attendanceForm, result);
+		
+//		if(result.hasErrors()) {
+////			model.addAttribute("attendanceForm",attendanceForm);
+////			String error = studentAttendanceService.update(attendanceForm, result);
+////			update(model);
+////			model.addAttribute("error", message);
+//			
+//			return "redirect:/attendance/update";
+//		}
+		// 更新
+//		String message = studentAttendanceService.update(attendanceForm, result);
+
+//		message.equals(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
+		model.addAttribute("message", message);	
+			
+//		}else{
+//			//入力チェックに通らない場合はエラーメッセージを出力
+//			
+//			
+//		}
 		
 		
 		// 一覧の再取得

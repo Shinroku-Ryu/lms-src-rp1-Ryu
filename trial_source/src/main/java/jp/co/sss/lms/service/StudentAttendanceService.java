@@ -8,6 +8,8 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
@@ -289,7 +291,8 @@ public class StudentAttendanceService {
 	 * @return 完了メッセージ
 	 * @throws ParseException
 	 */
-	public String update(AttendanceForm attendanceForm) throws ParseException {
+
+	public String update(AttendanceForm attendanceForm,BindingResult result) throws ParseException {
 
 		Integer lmsUserId = loginUserUtil.isStudent() ? loginUserDto.getLmsUserId()
 				: attendanceForm.getLmsUserId();
@@ -300,6 +303,9 @@ public class StudentAttendanceService {
 
 		// 入力された情報を更新用のエンティティに移し替え
 		Date date = new Date();
+		//Task.27-劉 入力チェックのエラーメッセージを格納するリストを生成
+//		List<String> errorMsg = new ArrayList<String>();
+		
 		for (DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
 
 			// 更新用エンティティ作成
@@ -333,10 +339,10 @@ public class StudentAttendanceService {
 				tStudentAttendance.setTrainingStartTime(trainingStartTime.getFormattedString());
 			}
 			
-			//Task.27
-			if (startHour == null && startMinute!= null || startHour!= null && startMinute == null) {
-				String errorMsg = messageUtil.getMessage(Constants.INPUT_INVALID,new String[]{"出勤時間"});
-				return errorMsg;
+//			Task.27-劉 出勤時＆分の入力チェック
+			String startTimeErrorMsg = messageUtil.getMessage(Constants.INPUT_INVALID,new String[]{"出勤時間"});
+			if ((startHour == null && startMinute!= null) || (startHour!= null && startMinute == null)){
+				result.addError(new FieldError("attendanceForm", "error",startTimeErrorMsg));
 			}
 			
 			// Task.26 劉 退勤時刻整形
@@ -353,6 +359,12 @@ public class StudentAttendanceService {
 				trainingEndTime = new TrainingTime(endTime);
 				tStudentAttendance.setTrainingEndTime(trainingEndTime.getFormattedString());
 			}
+			
+//			//Task.27-劉
+//			if (endHour == null && endMinute!= null || endHour!= null && endMinute == null) {
+//				String endTimeErrorMsg = messageUtil.getMessage(Constants.INPUT_INVALID,new String[]{"退勤時間"});
+////				errorMsg.add(endTimeErrorMsg);
+//			}
 	
 			// 中抜け時間
 			tStudentAttendance.setBlankTime(dailyAttendanceForm.getBlankTime());
@@ -364,12 +376,12 @@ public class StudentAttendanceService {
 				tStudentAttendance.setStatus(attendanceStatusEnum.code);
 			}
 			// 備考
-			tStudentAttendance.setNote(dailyAttendanceForm.getNote());
-				if(dailyAttendanceForm.getNote().length() > 100) {
-					String errorMsg = messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH,
-						new String[]{"備考","100"});
-					return errorMsg;
-			}
+//			tStudentAttendance.setNote(dailyAttendanceForm.getNote());
+//				if(dailyAttendanceForm.getNote().length() > 100) {
+//					String noteErrorMsg = messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH,
+//						new String[]{"備考","100"});
+////					errorMsg.add(noteErrorMsg);
+//			}
 			
 			// 更新者と更新日時
 			tStudentAttendance.setLastModifiedUser(loginUserDto.getLmsUserId());
@@ -380,8 +392,9 @@ public class StudentAttendanceService {
 			tStudentAttendanceList.add(tStudentAttendance);
 		}
 		
-//		if(errorMsg != null){
-//			return List<>;}
+//		if(!errorMsg.isEmpty()) {
+//		return errorMsg;
+//		}
 		
 		// 登録・更新処理
 		for (TStudentAttendance tStudentAttendance : tStudentAttendanceList) {
@@ -394,18 +407,20 @@ public class StudentAttendanceService {
 			}
 		}
 		// 完了メッセージ
+//			List<String> complete = new ArrayList<>();
+//			
+//			complete.add(messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE));
+//			return complete;
+//		もとの返却結果
+			return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 		
-//		String completeMsg = constants;
-//		List<>{completeMsg};
-		
-		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
 	
 	/**
 	 * 勤怠未入力件数があるかどうかを判定
 	 * 
-	 * @param lmsUserId
 	 * @author 劉-Task.25
+	 * @param lmsUserId
 	 * @return 判定結果
 	 */
 	public Boolean notEnterCount(Integer lmsUserId) {
@@ -420,8 +435,9 @@ public class StudentAttendanceService {
 		//未入力件数が0以上の場合trueを返す
 		if(notEnterCount > 0) {
 			return true;
+//			return notEnterCount>0だけでもOK
 		}else {
-			//0の場合はfalseを返す
+			//0以下の場合はfalseを返す
 			return false;
 		}
 	}
