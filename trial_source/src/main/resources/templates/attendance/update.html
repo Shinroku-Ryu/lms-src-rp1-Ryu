@@ -11,24 +11,27 @@
 		<h2>勤怠管理</h2>
 	</th:block>
 	
-<!--	 エラーメッセージ -->
-	<th:block th:if="${not #strings.isEmpty(error)}" id="error">
-		<ul style="padding-left: 0; list-style: none;">
-			<li><span th:text="'*' + '&nbsp' + ${error}" class="help-inline error"></span></li>
-		</ul>
-	</th:block>
-
 	<th:block th:if="${session.loginUserDto.role != '0001'}">
 		<h2>勤怠管理 <small>( [[${attendanceForm.userName}]] )</small></h2>
 		<th:block th:if="${session.loginUserDto.leaveFlg == '1'}">
 			<h2><small>途中退校日：${dispLeaveDate}</small></h2>
 		</th:block>
 	</th:block>
+	
+	
 
 	<div class="row">
 		<div class="bs-component col-sm-12">
 
 			<form th:action="@{/attendance/update}" method="post" th:object="${attendanceForm}">
+				<!--		 エラーメッセージ -->
+				<th:block th:if="${#fields.detailedErrors()}">
+					<ul style="padding-left: 0; list-style: none;">
+						<li th:each="error : ${#fields.detailedErrors()}">
+							<span th:text="'*' + '&nbsp' + ${error.message}" class="help-inline error"></span>
+						</li>
+					</ul>
+				</th:block>
 				<table class="table table-hover dataTable no-footer">
 					<thead>
 						<tr>
@@ -57,15 +60,15 @@
 								
 								<!--劉 Task.26 出退勤時間の時間、分に分けてセレクトボックスを追加-->
 								<td class="w70">
-									<select th:name="|attendanceList[${stat.index}].trainingStartTimeHour|" class="form-control">
+									<select th:name="|attendanceList[${stat.index}].trainingStartTimeHour|" class="form-control" th:errorclass="errorInput">
 										<option th:each="trainingStartTimeHour : ${attendanceForm.trainingHours}" th:value="${trainingStartTimeHour.key}"
 											th:inlne="text" class="form-control"
 											th:selected="${trainingStartTimeHour.key == dailyAttendanceForm.trainingStartTimeHour}">[[${trainingStartTimeHour.value}]]
 										</option>
-<!--										<ul style="padding-left: 0; list-style: none;">-->
-<!--											<li><span th:errors="${attendanceForm.trainingHours}" class="help-inline error"></span></li>-->
-<!--										</ul>-->
 									</select>
+<!--									<ul style="padding-left: 0; list-style: none;">-->
+<!--										<li><span th:errors="*{attendanceList}" class="help-inline error"></span></li>-->
+<!--									</ul>-->
 									
 								</td>
 								<td>:</td>

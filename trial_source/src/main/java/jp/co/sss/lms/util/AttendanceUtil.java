@@ -135,12 +135,12 @@ public class AttendanceUtil {
 	}
 	
 	/**
-	 * 時間マップを取得（選択肢用）
+	 * 時間のプルダウンマップを生成
 	 * 
 	 * @author 劉 Task.26
-	 * @return 時間マップ
+	 * @return 1時間刻みの時間(数値)マップ
 	 */
-	public LinkedHashMap<Integer, String> setTrainingTimeHourMap() {
+	public LinkedHashMap<Integer, String> getHourMap() {
 		LinkedHashMap<Integer, String> hourMap = new LinkedHashMap<>();
 		hourMap.put(null, "");
 		for (Integer i = 0; i < 24;) {
@@ -161,12 +161,12 @@ public class AttendanceUtil {
 	}
 	
 	/**
-	 * 分マップを取得
+	 * 分のプルダウンマップを生成
 	 * 
 	 * @author 劉 Task.26
-	 * @return 分マップ（選択肢用）
+	 * @return 1分刻みの分(数値)マップ
 	 */
-	public LinkedHashMap<Integer, String> setTrainingTimeMinuteMap() {
+	public LinkedHashMap<Integer, String> getMinuteMap() {
 		LinkedHashMap<Integer, String> minuteMap = new LinkedHashMap<>();
 		minuteMap.put(null, "");
 		for (Integer i = 0; i < 60;) {
@@ -187,13 +187,13 @@ public class AttendanceUtil {
 	}
 	
 	/**
-	 * 勤怠時間の時間を取得
+	 * 時間(時)の切り出し
 	 * 
 	 * @author 劉 Task.26
 	 * @param trainingTime
-	 * @return 勤怠時間の時間
+	 * @return 出退勤時間(時間)
 	 */
-	public Integer getTrainingTimeHour(String trainingTime) {
+	public Integer getHour(String trainingTime) {
 		
 		TrainingTime time = new TrainingTime(trainingTime);
 		Integer intHour = time.getHour(); 
@@ -202,13 +202,13 @@ public class AttendanceUtil {
 	}
 	
 	/**
-	 * 勤怠時間の分を取得
+	 * 時間(分)の切り出し
 	 * 
 	 * @author 劉 Task.26
 	 * @param trainingTime
-	 * @return 
+	 * @return 出退勤時間(分)
 	 */
-	public Integer getTrainingTimeMinute(String trainingTime) {
+	public Integer getMinute(String trainingTime) {
 		
 		TrainingTime time = new TrainingTime(trainingTime);
 		Integer intMinute = time.getMinute(); 

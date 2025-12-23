@@ -14,6 +14,7 @@ import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
+import jp.co.sss.lms.util.AttendanceUtil;
 import jp.co.sss.lms.util.Constants;
 
 /**
@@ -29,6 +30,8 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
+	@Autowired
+	private AttendanceUtil attendanceUtil;
 
 	/**
 	 * 勤怠管理画面 初期表示
@@ -138,27 +141,33 @@ public class AttendanceController {
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
 		
+		// 更新
 		String message = studentAttendanceService.update(attendanceForm, result);
 		
-//		if(result.hasErrors()) {
-////			model.addAttribute("attendanceForm",attendanceForm);
-////			String error = studentAttendanceService.update(attendanceForm, result);
-////			update(model);
-////			model.addAttribute("error", message);
-//			
-//			return "redirect:/attendance/update";
-//		}
-		// 更新
-//		String message = studentAttendanceService.update(attendanceForm, result);
-
-//		message.equals(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
-		model.addAttribute("message", message);	
+		List<AttendanceManagementDto> list = studentAttendanceService
+				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
+		
+		if(result.hasErrors()) {
 			
-//		}else{
-//			//入力チェックに通らない場合はエラーメッセージを出力
+			
+////		// フォームを再セットする
+//			AttendanceForm form = studentAttendanceService.setAttendanceForm(attendanceManagementDtoList);
+//			form.setAttendanceList(attendanceForm.getAttendanceList());
+////			
+//			model.addAttribute("attendanceForm",form);
+//			String error = studentAttendanceService.update(attendanceForm, result);
 //			
-//			
-//		}
+			//出退勤時間のみデータを取得
+			attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
+	        attendanceForm.setTrainingHours(attendanceUtil.getHourMap());
+	        attendanceForm.setTrainingMinutes(attendanceUtil.getMinuteMap());
+			
+			System.out.println("■■■■■■■■■■■"+result.getAllErrors()+"■■■■■■■■■■■");
+			return "attendance/update";
+			
+		}
+		
+		model.addAttribute("message", message);
 		
 		
 		// 一覧の再取得
