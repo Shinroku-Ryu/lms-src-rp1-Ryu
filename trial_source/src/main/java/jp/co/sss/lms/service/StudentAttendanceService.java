@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
+import jakarta.validation.Valid;
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.entity.TStudentAttendance;
@@ -283,6 +285,56 @@ public class StudentAttendanceService {
 
 		return attendanceForm;
 	}
+	
+	
+	public void updateCheck(@Valid AttendanceForm attendanceForm,BindingResult result) {
+		
+		for ( DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
+			
+			int listNo = attendanceForm.getAttendanceList().indexOf(dailyAttendanceForm);
+			
+			//備考が字数制限を超える場合
+			if(dailyAttendanceForm.getNote().length() > 100) {
+				String noteErrorMsg = messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH,
+					new String[]{"備考","100"});
+				result.addError(new FieldError(result.getObjectName(), "attendanceList"+listNo+".note",noteErrorMsg));
+			}
+			//出勤時＆分の片方が未入力場合
+			Integer startHour = dailyAttendanceForm.getTrainingStartTimeHour();
+			Integer startMinute = dailyAttendanceForm.getTrainingStartTimeMinute();
+			if((startHour == null && startMinute!= null) || (startHour!= null && startMinute == null)){
+				String startTimeErrorMsg = messageUtil.getMessage(Constants.INPUT_INVALID,new String[]{"出勤時間"});
+				result.addError(new ObjectError(result.getObjectName(), startTimeErrorMsg));
+			}
+			//退勤時＆分の片方が未入力の場合
+			Integer endHour = dailyAttendanceForm.getTrainingEndTimeHour();
+			Integer endMinute = dailyAttendanceForm.getTrainingEndTimeMinute();
+			if ((endHour == null && endMinute!= null) || (endHour!= null && endMinute == null)) {
+				String endTimeErrorMsg = messageUtil.getMessage(Constants.INPUT_INVALID,new String[]{"退勤時間"});
+				result.addError(new ObjectError(result.getObjectName(), endTimeErrorMsg));
+			}
+			//出勤時間が未入力の場合
+			String startTime = startHour + ":" + startMinute;;
+			dailyAttendanceForm.setTrainingStartTime(startTime);
+			String endTime = endHour + ":" + endMinute;;
+			dailyAttendanceForm.setTrainingEndTime(endTime);
+			
+			if(dailyAttendanceForm.getTrainingStartTime() == " : " && dailyAttendanceForm.getTrainingEndTime() != " : " ) {
+				String trainingTimeErrorMsg = messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY);
+				result.addError(new ObjectError(result.getObjectName(), trainingTimeErrorMsg));
+			}
+		
+		
+		
+		}
+	}
+//	dailyから取り出す
+//	check(){
+	
+//	for (i=0 , ){
+//	form. = set;
+//	 result.addError(new FieldError(result.getObjectName(), ,endTimeErrorMsg));
+	
 
 	/**
 	 * 勤怠登録・更新処理
@@ -292,7 +344,7 @@ public class StudentAttendanceService {
 	 * @throws ParseException
 	 */
 
-	public String update(AttendanceForm attendanceForm,BindingResult result) throws ParseException {
+	public String update(@Valid AttendanceForm attendanceForm) throws ParseException {
 
 		Integer lmsUserId = loginUserUtil.isStudent() ? loginUserDto.getLmsUserId()
 				: attendanceForm.getLmsUserId();
@@ -323,6 +375,7 @@ public class StudentAttendanceService {
 			tStudentAttendance.setLmsUserId(lmsUserId);
 			tStudentAttendance.setAccountId(loginUserDto.getAccountId());
 			
+			
 			// Task.26 劉 出勤時刻整形
 			TrainingTime trainingStartTime = null;
 			Integer startHour = dailyAttendanceForm.getTrainingStartTimeHour();
@@ -337,12 +390,7 @@ public class StudentAttendanceService {
 				tStudentAttendance.setTrainingStartTime(trainingStartTime.getFormattedString());
 			}
 			
-//			Task.27-劉 出勤時＆分の入力チェック
-			if((startHour == null && startMinute!= null) || (startHour!= null && startMinute == null)){
-//				startTime = "";
-				String startTimeErrorMsg = messageUtil.getMessage(Constants.INPUT_INVALID,new String[]{"出勤時間"});
-				result.addError(new FieldError(result.getObjectName(), "attendanceList",startTimeErrorMsg));
-			}
+////		
 			
 			// Task.26 劉 退勤時刻整形
 			TrainingTime trainingEndTime = null;
@@ -359,12 +407,9 @@ public class StudentAttendanceService {
 				tStudentAttendance.setTrainingEndTime(trainingEndTime.getFormattedString());
 			}
 			
-			//Task.27-劉
-			if (endHour == null && endMinute!= null || endHour!= null && endMinute == null) {
-				String endTimeErrorMsg = messageUtil.getMessage(Constants.INPUT_INVALID,new String[]{"退勤時間"});
-				result.addError(new FieldError(result.getObjectName(), "attendanceList",endTimeErrorMsg));
-			}
-	
+//			//Task.27-劉
+//			
+//	
 			// 中抜け時間
 			tStudentAttendance.setBlankTime(dailyAttendanceForm.getBlankTime());
 			// 遅刻早退ステータス
@@ -376,11 +421,6 @@ public class StudentAttendanceService {
 			}
 			// 備考
 			tStudentAttendance.setNote(dailyAttendanceForm.getNote());
-				if(dailyAttendanceForm.getNote().length() > 100) {
-					String noteErrorMsg = messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH,
-						new String[]{"備考","100"});
-					result.addError(new FieldError(result.getObjectName(), "attendanceList",noteErrorMsg));
-			}
 			
 			// 更新者と更新日時
 			tStudentAttendance.setLastModifiedUser(loginUserDto.getLmsUserId());
