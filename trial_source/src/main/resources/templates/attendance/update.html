@@ -25,7 +25,7 @@
 		<div class="bs-component col-sm-12">
 
 			<form th:action="@{/attendance/update}" method="post" th:object="${attendanceForm}">
-				<!--		 エラーメッセージ -->
+				<!-- Task27.劉 エラーメッセージ出力 -->
 				<th:block th:if="${#fields.detailedErrors()}">
 					<ul style="padding-left: 0; list-style: none;">
 						<li th:each="error : ${#fields.detailedErrors()}">
@@ -67,6 +67,7 @@
 
 								<!--劉 Task.26 出退勤時間の時間、分に分けてセレクトボックスを追加-->
 								<td class="w70">
+									<!--Task.27 劉 エラークラスタグを追記-->
 									<select th:name="|attendanceList[${stat.index}].trainingStartTimeHour|"
 										class="form-control" th:errorclass="errorInput">
 										<option th:each="trainingStartTimeHour : ${attendanceForm.trainingHours}"
@@ -75,15 +76,13 @@
 											[[${trainingStartTimeHour.value}]]
 										</option>
 									</select>
-									<!--									ul style="padding-left: 0; list-style: none;">-->
-									<!--										<li><span th:errors="*{attendanceList}" class="help-inline error"></span></li>-->
-									<!--									</ul>-->
-
+									
 								</td>
 								<td>:</td>
 								<td class="w70">
+									<!--Task.27 劉 エラークラスタグを追記-->
 									<select th:name="|attendanceList[${stat.index}].trainingStartTimeMinute|"
-										class="form-control">
+										class="form-control" th:errorclass="errorInput">
 										<option th:each="trainingStartTimeMinute : ${attendanceForm.trainingMinutes}"
 											th:value="${trainingStartTimeMinute.key}" th:inlne="text"
 											class="form-control"
@@ -92,8 +91,9 @@
 									</select>
 								</td>
 								<td class="w70">
+									<!--Task.27 劉 エラークラスタグを追記-->
 									<select th:name="|attendanceList[${stat.index}].trainingEndTimeHour|"
-										class="form-control">
+										class="form-control" th:errorclass="errorInput">
 										<option th:each="trainingEndTimeHour : ${attendanceForm.trainingHours}"
 											th:value="${trainingEndTimeHour.key}" th:inlne="text" class="form-control"
 											th:selected="${trainingEndTimeHour.key == dailyAttendanceForm.trainingEndTimeHour}">
@@ -102,8 +102,9 @@
 								</td>
 								<td>:</td>
 								<td class="w70">
+									<!--Task.27 劉 エラークラスタグを追記-->
 									<select th:name="|attendanceList[${stat.index}].trainingEndTimeMinute|"
-										class="form-control">
+										class="form-control" th:errorclass="errorInput">
 										<option th:each="trainingEndTimeMinute : ${attendanceForm.trainingMinutes}"
 											th:value="${trainingEndTimeMinute.key}" th:inlne="text" class="form-control"
 											th:selected="${trainingEndTimeMinute.key == dailyAttendanceForm.trainingEndTimeMinute}">
@@ -112,7 +113,8 @@
 								</td>
 
 								<td class="w80">
-									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control">
+									<!--Task.27 劉 エラークラスタグを追記-->
+									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control" th:errorclass="errorInput">
 										<option th:each="blankTime : ${attendanceForm.blankTimes}"
 											th:value="${blankTime.key}" th:inlne="text" class="form-control"
 											th:selected="${blankTime.key == dailyAttendanceForm.blankTime}">
@@ -122,7 +124,6 @@
 								<td class="w70">[[${dailyAttendanceForm.statusDispName}]]</td>
 								<td class="w240">
 									<input type="text" th:name="|attendanceList[${stat.index}].note|" th:value="${dailyAttendanceForm.note}" class="form-control" th:errorclass="errorInput"></input>
-<!--									<input type="text" th:field="*{attendanceList}" th:value="${dailyAttendanceForm.note}" class="form-control"></input>-->
 								</td>
 							</tr>
 						</th:block>
@@ -143,6 +144,7 @@
 			</form>
 		</div>
 	</div>
+	<!--Task.27 更新ダイアログ追加-->
 	<script>
 		function updateCheck() {
 			if (confirm("更新します。よろしいですか？")) {

@@ -143,15 +143,12 @@ public class AttendanceController {
 		
 		studentAttendanceService.updateCheck(attendanceForm, result);
 		
-		if (result.hasErrors()) {
-			
-			//出退勤時間のみデータを取得
+		//Task.27 劉 入力チェック
+		if (result.hasErrors()) {			
+			//選択肢内容を設定
 			attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
 			attendanceForm.setTrainingHours(attendanceUtil.getHourMap());
-			attendanceForm.setTrainingMinutes(attendanceUtil.getMinuteMap());
-
-			System.out.println("■■■■■■■■■■■" + result.getAllErrors() + "■■■■■■■■■■■");
-			
+			attendanceForm.setTrainingMinutes(attendanceUtil.getMinuteMap());			
 			return "attendance/update";
 
 		}
